@@ -1,44 +1,101 @@
+import { ArrowRight, BookOpen, Search, Lightbulb, AlertTriangle, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const problems = [
+  { icon: BookOpen, text: "Read papers like novels — from start to finish" },
+  { icon: Search, text: "Get lost in dense math and jargon" },
+  { icon: AlertTriangle, text: "Miss hidden assumptions and weak evidence" },
+  { icon: Clock, text: "Spend hours summarizing instead of thinking critically" },
+  { icon: Lightbulb, text: "Overlook whether a paper is even worth reading" },
+];
+
 const AboutPage = () => {
   return (
-    <div className="bg-page-gradient min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-xl py-24 animate-fade-up">
-        {/* Title */}
-        <h1 className="text-title-gradient text-4xl sm:text-5xl font-extrabold tracking-tight text-center">
-          Why Outline AI Exists
-        </h1>
-        <p className="text-muted-foreground text-lg sm:text-xl mt-5 text-center leading-relaxed">
-          The research world doesn't need more papers. It needs deeper understanding.
-        </p>
+    <div className="bg-page-gradient min-h-screen relative overflow-hidden">
+      {/* Dot pattern */}
+      <div className="absolute inset-0 dot-pattern animate-fade-in-slow" />
 
-        {/* Content */}
-        <div className="mt-14 space-y-6 text-foreground/85 text-base leading-relaxed">
-          <p>Every day, thousands of new research papers are published.</p>
+      {/* Decorative orb */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-accent/30 blur-3xl" />
 
-          <p>
-            Researchers don't struggle with access to papers.
-            <br />
-            They struggle with understanding them deeply and quickly.
-          </p>
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
+        <div className="w-full max-w-2xl py-24 sm:py-32">
+          {/* Back link */}
+          <div className="animate-fade-up mb-16">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors tracking-wide uppercase"
+            >
+              <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+              Back to home
+            </Link>
+          </div>
 
-          <h2 className="font-bold text-foreground text-lg pt-4">Most people:</h2>
+          {/* Title */}
+          <div className="animate-fade-up">
+            <h1 className="text-title-gradient text-4xl sm:text-6xl font-extrabold tracking-[-0.03em] leading-tight">
+              Why Outline AI
+              <br />
+              Exists
+            </h1>
+            <p className="text-muted-foreground text-lg sm:text-xl mt-6 leading-relaxed font-serif italic max-w-lg">
+              The research world doesn't need more papers. It needs deeper understanding.
+            </p>
+          </div>
 
-          <ul className="space-y-2.5 pl-5 list-disc marker:text-muted-foreground/50">
-            <li>Read papers like novels — from start to finish</li>
-            <li>Get lost in dense math and jargon</li>
-            <li>Miss hidden assumptions and weak evidence</li>
-            <li>Spend hours summarizing instead of thinking critically</li>
-            <li>Overlook whether a paper is even worth reading</li>
-          </ul>
+          {/* Divider */}
+          <div className="my-14 h-px bg-border-soft animate-fade-up-delay" />
 
-          <p className="pt-2">
-            And with the explosion of research in fields like machine learning, systems, and AI, this problem is only getting worse.
-          </p>
+          {/* Content */}
+          <div className="space-y-8 animate-fade-up-delay">
+            <p className="text-foreground/80 text-base sm:text-lg leading-relaxed">
+              Every day, thousands of new research papers are published.
+            </p>
+
+            <p className="text-foreground/80 text-base sm:text-lg leading-relaxed">
+              Researchers don't struggle with access to papers.
+              <br />
+              <span className="text-foreground font-medium">They struggle with understanding them deeply and quickly.</span>
+            </p>
+          </div>
+
+          {/* Problem cards */}
+          <div className="mt-14 animate-fade-up-delay-2">
+            <h2 className="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-6">
+              Most people
+            </h2>
+            <div className="space-y-3">
+              {problems.map(({ icon: Icon, text }, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-4 p-4 rounded-xl bg-card/60 border border-border-soft/50 hover:bg-card/80 transition-colors"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-accent/60 flex items-center justify-center shrink-0 mt-0.5">
+                    <Icon className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+                  </div>
+                  <p className="text-foreground/80 text-sm sm:text-base leading-relaxed">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Closing */}
+          <div className="mt-16 space-y-10">
+            <p className="text-foreground/70 text-base sm:text-lg leading-relaxed animate-fade-up-delay-2">
+              And with the explosion of research in fields like machine learning, systems, and AI, this problem is only getting worse.
+            </p>
+
+            <div className="animate-fade-up-delay-2">
+              <div className="card-glass rounded-2xl p-8 sm:p-10 border border-border-soft/50 text-center">
+                <p className="text-title-gradient text-xl sm:text-2xl font-bold leading-snug font-serif">
+                  "We are drowning in papers —
+                  <br />
+                  but starving for clarity."
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* Final statement */}
-        <p className="text-title-gradient text-xl sm:text-2xl font-bold text-center mt-16 leading-snug">
-          We are drowning in papers — but starving for clarity.
-        </p>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
 @layer base {
   :root {
@@ -26,14 +27,14 @@
     --muted: 37 23% 95%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 210 18% 96%;
+    --accent: 30 40% 94%;
     --accent-foreground: 215 28% 17%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 213 27% 84%;
-    --border-soft: 213 20% 88%;
+    --border-soft: 220 15% 90%;
     --input: 213 27% 84%;
     --ring: 215 28% 17%;
 
@@ -112,6 +113,10 @@
     background-clip: text;
   }
 
+  .font-serif {
+    font-family: 'Newsreader', Georgia, serif;
+  }
+
   .glow-title {
     position: relative;
   }
@@ -119,11 +124,11 @@
   .glow-title::before {
     content: '';
     position: absolute;
-    inset: -40%;
+    inset: -60%;
     background: radial-gradient(
       ellipse at center,
-      hsl(37 40% 92% / 0.7) 0%,
-      transparent 70%
+      hsl(37 40% 90% / 0.6) 0%,
+      transparent 65%
     );
     pointer-events: none;
     z-index: -1;
@@ -132,23 +137,30 @@
   .card-glass {
     background: hsl(var(--card-glass));
     box-shadow: var(--shadow-elevated);
+    backdrop-filter: blur(12px);
   }
 
   .border-upload {
     border: 2px dashed hsl(var(--border-soft));
-    transition: border-color 200ms ease, transform 200ms ease;
+    transition: border-color 200ms ease, transform 200ms ease, background 200ms ease;
   }
 
   .border-upload:hover {
     border-color: hsl(var(--border));
     transform: scale(1.02);
+    background: hsl(var(--accent) / 0.3);
+  }
+
+  .dot-pattern {
+    background-image: radial-gradient(circle, hsl(var(--foreground) / 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 }
 
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -156,16 +168,34 @@
   }
 }
 
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
 .animate-fade-up {
-  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-up-delay {
-  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
   opacity: 0;
 }
 
 .animate-fade-up-delay-2 {
-  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
   opacity: 0;
+}
+
+.animate-fade-in-slow {
+  animation: fade-in 1.2s ease forwards;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
