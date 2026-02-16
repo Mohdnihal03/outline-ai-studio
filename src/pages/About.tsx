@@ -1,5 +1,5 @@
-import { ArrowRight, BookOpen, Search, Lightbulb, AlertTriangle, Clock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { BookOpen, Search, Lightbulb, AlertTriangle, Clock } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const problems = [
   { icon: BookOpen, text: "Read papers like novels — from start to finish" },
@@ -12,6 +12,7 @@ const problems = [
 const AboutPage = () => {
   return (
     <div className="bg-page-gradient min-h-screen relative overflow-hidden">
+      <Navbar />
       {/* Dot pattern */}
       <div className="absolute inset-0 dot-pattern animate-fade-in-slow" />
 
@@ -20,16 +21,8 @@ const AboutPage = () => {
 
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
         <div className="w-full max-w-2xl py-24 sm:py-32">
-          {/* Back link */}
-          <div className="animate-fade-up mb-16">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors tracking-wide uppercase"
-            >
-              <ArrowRight className="w-3.5 h-3.5 rotate-180" />
-              Back to home
-            </Link>
-          </div>
+          {/* Spacer for navbar */}
+          <div className="h-8" />
 
           {/* Title */}
           <div className="animate-fade-up">

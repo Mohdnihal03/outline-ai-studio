@@ -1,9 +1,11 @@
 import UploadCard from "@/components/UploadCard";
+import Navbar from "@/components/Navbar";
 import { FileText, Sparkles } from "lucide-react";
 
 const Index = () => {
   return (
     <div className="bg-page-gradient min-h-screen relative overflow-hidden">
+      <Navbar />
       {/* Dot pattern background */}
       <div className="absolute inset-0 dot-pattern animate-fade-in-slow" />
 

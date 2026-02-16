@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -130,18 +130,14 @@ const Engine2 = () => {
 
   return (
     <div className="bg-page-gradient min-h-screen flex flex-col">
+      <Navbar />
       {/* Header */}
-      <header className="border-b border-border-soft px-6 py-4 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-4">
-          <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-          </Link>
-          <div>
-            <h1 className="text-sm font-bold tracking-[3px] uppercase text-foreground">Engine 2</h1>
-            <p className="text-[10px] text-muted-foreground tracking-widest uppercase">
-              Analysis Pipeline — Specialist Agent Layer
-            </p>
-          </div>
+      <header className="border-b border-border-soft px-6 py-4 flex items-center justify-between shrink-0 mt-14">
+        <div>
+          <h1 className="text-sm font-bold tracking-[3px] uppercase text-foreground">Engine 2</h1>
+          <p className="text-[10px] text-muted-foreground tracking-widest uppercase">
+            Analysis Pipeline — Specialist Agent Layer
+          </p>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#E87D5B" }} />
