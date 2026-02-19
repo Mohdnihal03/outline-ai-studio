@@ -25,7 +25,7 @@ const PipelineLog = ({ entries, isAnalyzing }: PipelineLogProps) => {
       {entries.length === 0 ? (
         <div className="text-muted-foreground space-y-1">
           <p>{"> waiting for input..."}</p>
-          <p>{"> enter paper title to begin"}</p>
+          <p>{"> upload PDF and click analyze"}</p>
         </div>
       ) : (
         <div className="space-y-1">

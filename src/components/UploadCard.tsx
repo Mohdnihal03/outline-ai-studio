@@ -1,9 +1,15 @@
 import { useState, useCallback } from "react";
 import { Upload, CheckCircle2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 const UploadCard = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const navigate = useNavigate();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -17,16 +23,45 @@ const UploadCard = () => {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file?.type === "application/pdf") {
-      setFileName(file.name);
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile?.type === "application/pdf") {
+      setFile(droppedFile);
+      setFileName(droppedFile.name);
     }
   }, []);
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setFileName(file.name);
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile?.type === "application/pdf") {
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
+    }
   }, []);
+
+  const handleAnalyze = useCallback(async () => {
+    if (!file || !fileName || isAnalyzing) return;
+
+    setIsAnalyzing(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(`${API_BASE}/extract`, {
+        method: "POST",
+        headers: { accept: "application/json" },
+        body: formData,
+      });
+
+      if (response.status === 200) {
+        const extractData = await response.json();
+        navigate("/engine2", { state: { extractData } });
+      }
+    } catch {
+      // Keep the user on the current page when backend is unavailable.
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [file, fileName, isAnalyzing, navigate]);
 
   return (
     <div className="w-full max-w-md mx-auto animate-fade-up-delay-2">
@@ -70,8 +105,13 @@ const UploadCard = () => {
           />
         </label>
 
-        <button className="w-full mt-5 bg-primary text-primary-foreground rounded-xl py-3.5 text-sm font-semibold shadow-sm hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 tracking-wide">
-          Analyze Paper
+        <button
+          type="button"
+          onClick={handleAnalyze}
+          disabled={!file || isAnalyzing}
+          className="w-full mt-5 bg-primary text-primary-foreground rounded-xl py-3.5 text-sm font-semibold shadow-sm hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 tracking-wide disabled:opacity-50 disabled:pointer-events-none"
+        >
+          {isAnalyzing ? "Analyzing..." : "Analyze Paper"}
         </button>
       </div>
     </div>
