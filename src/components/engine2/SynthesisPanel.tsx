@@ -6,6 +6,9 @@ interface SynthesisData {
   three_questions: string[];
   recommended_pass: number;
   status_label: string;
+  strengths?: string[];
+  weaknesses?: string[];
+  reasoning?: string;
 }
 
 interface SynthesisPanelProps {
@@ -54,6 +57,44 @@ const SynthesisPanel = ({ data }: SynthesisPanelProps) => {
             ))}
           </div>
         </div>
+
+        {(data.strengths?.length || data.weaknesses?.length) && (
+          <div className="grid grid-cols-1 gap-3">
+            {data.strengths && data.strengths.length > 0 && (
+              <div className="rounded-lg border border-border-soft bg-card/60 p-4">
+                <p className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground mb-2">
+                  Strengths
+                </p>
+                <div className="space-y-1">
+                  {data.strengths.map((item, i) => (
+                    <p key={`${item}-${i}`} className="text-xs text-foreground/80">{item}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+            {data.weaknesses && data.weaknesses.length > 0 && (
+              <div className="rounded-lg border border-border-soft bg-card/60 p-4">
+                <p className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground mb-2">
+                  Weaknesses
+                </p>
+                <div className="space-y-1">
+                  {data.weaknesses.map((item, i) => (
+                    <p key={`${item}-${i}`} className="text-xs text-foreground/80">{item}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {data.reasoning && (
+          <div className="rounded-lg border border-border-soft bg-card/60 p-4">
+            <p className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground mb-2">
+              Verdict Reasoning
+            </p>
+            <p className="text-xs text-foreground/80 leading-relaxed">{data.reasoning}</p>
+          </div>
+        )}
 
         {/* Bottom stats */}
         <div className="grid grid-cols-2 gap-3">

@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { label: "Home", path: "/" },
   { label: "About", path: "/about" },
-  { label: "Engine 2", path: "/engine2" },
+  { label: "Abstract", path: "/abstract" },
+  { label: "Analysis", path: "/engine2" },
 ];
 
 const Navbar = () => {

@@ -25,7 +25,6 @@ const AgentCard = ({ agent, status, onClick }: AgentCardProps) => {
         cursor: isClickable ? "pointer" : "default",
       }}
     >
-      {/* Scanning light */}
       {status === "running" && (
         <div className="absolute top-0 left-0 right-0 h-[2px] overflow-hidden">
           <div
@@ -35,7 +34,6 @@ const AgentCard = ({ agent, status, onClick }: AgentCardProps) => {
         </div>
       )}
 
-      {/* Row 1: Icon + Badge */}
       <div className="flex items-start justify-between mb-3">
         <span className="text-2xl" style={{ color: status !== "idle" ? agent.color : "hsl(var(--muted-foreground))" }}>
           {agent.icon}
@@ -52,23 +50,19 @@ const AgentCard = ({ agent, status, onClick }: AgentCardProps) => {
         </span>
       </div>
 
-      {/* Row 2: Name */}
       <h3 className="text-sm font-semibold leading-none tracking-tight text-foreground mb-1.5">
         {agent.label}
       </h3>
 
-      {/* Row 3: Description */}
       <p className="text-xs text-muted-foreground mb-2">{agent.description}</p>
 
-      {/* Row 4: Section */}
       <p className="text-[10px] font-medium tracking-wide" style={{ color: agent.color }}>
-        ← {agent.section}
+        Section: {agent.section}
       </p>
 
-      {/* Row 5: View Results */}
       {status === "done" && (
         <p className="text-xs font-medium mt-3 tracking-wide" style={{ color: agent.color }}>
-          VIEW RESULTS →
+          VIEW RESULTS
         </p>
       )}
     </div>

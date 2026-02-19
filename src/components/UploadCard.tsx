@@ -54,7 +54,7 @@ const UploadCard = () => {
 
       if (response.status === 200) {
         const extractData = await response.json();
-        navigate("/engine2", { state: { extractData } });
+        navigate("/abstract", { state: { extractData } });
       }
     } catch {
       // Keep the user on the current page when backend is unavailable.

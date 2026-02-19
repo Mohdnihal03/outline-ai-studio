@@ -50,6 +50,19 @@ function reproducibilityToScore(label?: string): number {
   return 60;
 }
 
+function parseEmbeddedJson(raw?: string): any | null {
+  if (!raw) return null;
+  const start = raw.indexOf("{");
+  const end = raw.lastIndexOf("}");
+  if (start === -1 || end === -1 || end <= start) return null;
+  const candidate = raw.slice(start, end + 1).replace(/"\s*,\s*"item"/g, '"item"');
+  try {
+    return JSON.parse(candidate);
+  } catch {
+    return null;
+  }
+}
+
 function normalizeResult(finalData: any) {
   if (finalData?.agents) return finalData;
 
@@ -60,16 +73,23 @@ function normalizeResult(finalData: any) {
   const assumptionData = analysis?.assumptions ?? {};
   const baselineData = analysis?.baselines ?? {};
   const reproData = analysis?.reproducibility ?? {};
+  const reproParsed = reproData?.parse_failed ? parseEmbeddedJson(reproData?.raw_output) : null;
+  const reproResolved = reproParsed ?? reproData;
   const pseudoData = analysis?.pseudocode ?? {};
   const synthesisData = analysis?.synthesis ?? {};
 
   const agents = {
     claim: {
+      core_problem: claimData?.core_problem ?? "",
+      proposed_solution: claimData?.proposed_solution ?? "",
+      what_must_be_true: claimData?.what_must_be_true ?? "",
+      paper_type: claimData?.paper_type ?? "",
       claims: (claimData?.contribution_claims ?? []).map((item: any) => ({
         type: claimData?.paper_type ?? "claim",
         risk: "med",
         claim: item?.claim ?? "",
         strength: evidenceData?.overall_evidence_strength ?? "unknown",
+        quote: item?.supporting_quote ?? "",
       })),
     },
     evidence: {
@@ -78,29 +98,39 @@ function normalizeResult(finalData: any) {
         claim: item?.claim ?? "",
         location: item?.evidence_location ?? "",
         gap: item?.gap_risk && item?.gap_risk !== "NONE" ? item.gap_risk : "",
+        quote: item?.evidence_quote ?? "",
       })),
+      overall_strength: evidenceData?.overall_evidence_strength ?? "",
+      high_risk: evidenceData?.high_risk_claims ?? [],
     },
     assumption: {
       assumptions: (assumptionData?.assumptions ?? []).map((item: any) => ({
         centrality: item?.centrality ?? "peripheral",
-        text: item?.assumption ?? "",
-        breaks: item?.what_breaks_if_wrong ?? "",
+        text: item?.assumption ?? item?.quote ?? "",
+        breaks: item?.what_breaks_if_wrong ?? item?.consequences ?? "",
       })),
+      hidden_assumption: assumptionData?.hidden_assumption ?? null,
     },
     baseline: {
       baselines: (baselineData?.baselines ?? []).map((item: any) => ({
         name: item?.name ?? "",
         age: item?.year ?? "",
-        note: item?.concern ?? "",
+        note: item?.concern ?? item?.reason ?? "",
         fair: item?.is_current !== false,
       })),
+      metrics: baselineData?.metrics ?? [],
+      missing: baselineData?.missing_comparisons ?? [],
+      repro_note: baselineData?.reproducibility ?? null,
     },
     repro: {
-      score: reproducibilityToScore(reproData?.overall_reproducibility),
-      checklist: (reproData?.checklist ?? []).map((item: any) => ({
+      score: reproducibilityToScore(reproResolved?.overall_reproducibility),
+      checklist: (reproResolved?.checklist ?? []).map((item: any) => ({
         item: item?.item ?? "",
         status: normalizeChecklistStatus(item?.status),
+        quote: item?.quote ?? "",
+        explanation: item?.explanation ?? "",
       })),
+      biggest_gap: reproResolved?.biggest_gap ?? "",
     },
     pseudo: {
       steps: (pseudoData?.high_level_pseudocode ?? []).map((step: string, i: number) => ({
@@ -108,6 +138,16 @@ function normalizeResult(finalData: any) {
         text: step,
         ambiguous: false,
       })),
+      detailed: pseudoData?.detailed_pseudocode ?? "",
+      code_steps: (pseudoData?.code_walkthrough ?? []).map((item: any, i: number) => ({
+        step: item?.step ?? `Step ${i + 1}`,
+        library: item?.library ?? "",
+        code: item?.code ?? "",
+        notes: item?.notes ?? "",
+      })),
+      code_sample: pseudoData?.code_sample ?? "",
+      ambiguities: pseudoData?.ambiguities ?? [],
+      notes: pseudoData?.implementation_notes ?? [],
     },
     synthesis: {
       trust_score: confidenceToScore(synthesisData?.verdict?.confidence),
@@ -115,6 +155,9 @@ function normalizeResult(finalData: any) {
       three_questions: (synthesisData?.suggested_next_steps ?? []).slice(0, 3),
       recommended_pass: 1,
       status_label: synthesisData?.verdict?.worth_building_on ? "BUILDABLE" : "RISKY",
+      strengths: synthesisData?.strengths ?? [],
+      weaknesses: synthesisData?.weaknesses ?? [],
+      reasoning: synthesisData?.verdict?.reasoning ?? "",
     },
   };
 
@@ -383,7 +426,7 @@ const Engine2 = () => {
       <Navbar />
       <header className="border-b border-border-soft px-6 py-4 flex items-center justify-between shrink-0 mt-14">
         <div>
-          <h1 className="text-sm font-bold tracking-[3px] uppercase text-foreground">Engine 2</h1>
+          <h1 className="text-sm font-bold tracking-[3px] uppercase text-foreground">Analysis</h1>
           <p className="text-[10px] text-muted-foreground tracking-widest uppercase">
             Analysis Pipeline - Specialist Agent Layer
           </p>
@@ -404,7 +447,7 @@ const Engine2 = () => {
               </Button>
               {!extractData && (
                 <p className="text-xs text-muted-foreground mt-2">
-                  Upload a PDF first so Engine 2 can receive JSON from <code>/extract</code>.
+                  Upload a PDF first so Analysis can receive JSON from <code>/extract</code>.
                 </p>
               )}
             </div>
